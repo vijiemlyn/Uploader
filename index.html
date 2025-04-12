@@ -70,6 +70,26 @@
     .copy-btn:hover {
       background-color: #218838;
     }
+
+    /* Loading spinner styles */
+    #loader {
+      display: none;
+      margin-top: 1.5rem;
+    }
+
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #20639b;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -77,6 +97,12 @@
   <div class="card">
     <input type="file" id="fileInput" />
     <button onclick="uploadFile()">Upload</button>
+
+    <!-- Loading Spinner -->
+    <div id="loader">
+      <div class="spinner"></div>
+    </div>
+
     <div class="output" id="outputBox">
       <div id="fileLink"></div>
       <button class="copy-btn" onclick="copyLink()">Copy Link</button>
@@ -100,6 +126,10 @@
         return;
       }
 
+      // Show the loading spinner
+      const loader = document.getElementById("loader");
+      loader.style.display = "block";
+
       const reader = new FileReader();
       reader.onload = function () {
         const base64Data = reader.result.split(",")[1];
@@ -114,13 +144,21 @@
         })
         .then((res) => res.text())
         .then((link) => {
+          // Hide the loading spinner after successful upload
+          loader.style.display = "none";
+
           const outputBox = document.getElementById("outputBox");
           const fileLink = document.getElementById("fileLink");
 
           fileLink.innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
           outputBox.style.display = "block";
+
+          // Clear the input after upload
+          fileInput.value = "";
         })
         .catch((err) => {
+          // Hide the loading spinner if an error occurs
+          loader.style.display = "none";
           alert("Upload failed: " + err.message);
           console.error(err);
         });
