@@ -95,7 +95,7 @@
 <body>
   <h1>Upload File to Google Drive</h1>
   <div class="card">
-    <input type="file" id="fileInput" />
+    <input type="file" id="fileInput" onchange="clearLink()" />
     <button onclick="uploadFile()">Upload</button>
 
     <!-- Loading Spinner -->
@@ -111,6 +111,14 @@
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycby0skLVzND4XtNpGq1GTje1bO7OI6wwRuTwc8UK4pvyz8wXqiS5DuhZADWk2KoJ_Z1h/exec"; // Replace with your Apps Script URL
+
+    // Clear the link when a new file is selected
+    function clearLink() {
+      const outputBox = document.getElementById("outputBox");
+      const fileLink = document.getElementById("fileLink");
+      outputBox.style.display = "none";
+      fileLink.innerHTML = "";
+    }
 
     function uploadFile() {
       const fileInput = document.getElementById("fileInput");
